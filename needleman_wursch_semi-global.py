@@ -5,13 +5,6 @@ class NeedlemanWurschSemiGlobal:
         self.seq1 = seq1
         self.seq2 = seq2
         self.matrix = np.zeros((len(seq2)+1, len(seq1)+1), dtype=object)
-        self.__intialize_matrix()
-
-    def __intialize_matrix(self):
-        for i in range(1, self.matrix.shape[0]):
-            self.matrix[i, 0] = 0
-        for j in range(1, self.matrix.shape[1]):
-            self.matrix[0, j] = 0
 
     def fill_matrix(self, match_add=1, gap_penalty=1):
         for i in range(1, self.matrix.shape[0]):
@@ -43,8 +36,8 @@ class NeedlemanWurschSemiGlobal:
             # print(current_position)
             row_index = current_position[0]
             col_index = current_position[1]
-            up_reduction = 0 if col_index == self.matrix.shape[1]-1 else 1      # Allow gap in last col
-            left_reduction = 0 if row_index == self.matrix.shape[0]-1 else 1    # Allow gap in last row
+            up_reduction = 0 if (col_index==0 or col_index==self.matrix.shape[1]-1) else 1      # Allow gap in last col
+            left_reduction = 0 if (row_index==0 or row_index==self.matrix.shape[0]-1) else 1    # Allow gap in last row
             # Check up
             if self.matrix[row_index-1, col_index] - up_reduction == self.matrix[row_index, col_index]:
                 current_position = (row_index-1, col_index)
@@ -84,7 +77,7 @@ class NeedlemanWurschSemiGlobal:
 
 if __name__ == '__main__':
     seq1 = 'ACACTGATCG'
-    seq2 = 'ACACTG'
+    seq2 = 'CGT'
 
     nw_semi_global = NeedlemanWurschSemiGlobal(seq1, seq2)
     nw_semi_global.fill_matrix()
